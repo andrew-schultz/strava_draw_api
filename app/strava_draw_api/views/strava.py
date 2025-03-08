@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from strava_draw_api.auth import JWTAuthentication, AllowAuth
-from strava_draw_api.services.strava import get_authorization, get_access_token, get_activities
+from strava_draw_api.services.strava import get_authorization, get_access_token, get_all_activities
 from strava_draw_api.serializers.auth import AuthResponseSerializer
 
 
@@ -22,11 +22,10 @@ class AuthAPIView(APIView):
             print('integration', integration)
             # pull the activities
             # initial pull
-            activities = get_activities(integration.account_id, integration.access_token, integration.refresh_token, user, 1, False)
-            print('activiites', activities)
+            activities = get_all_activities(integration.account_id, integration.access_token, integration.refresh_token, user, 1, False)
+            print('activiites', len(activities))
 
-
-            return Response(AuthResponseSerializer({'success': True, 'activities': activities}).data)
+            return Response(AuthResponseSerializer({'success': True, 'activities': activities[:100]}).data)
         else:
             # there was an error authorizing the code (or something else)
             # return error

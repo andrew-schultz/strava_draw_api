@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from strava_draw_api.auth import JWTAuthentication
 # from strava_draw_api.models import Activity, Integration
-from strava_draw_api.serializers.activity import ActivitySerializer
+from strava_draw_api.serializers.activity import ActivitySerializer, ActivityListSerializer
 from strava_draw_api.services.strava import get_activities
 
 
@@ -18,17 +18,18 @@ class ActivityAPIView(ListAPIView):
             paginated_queryset = self.paginate_queryset(queryset)
             activities = self.get_paginated_response(paginated_queryset)
             activities = dict(activities.data)
-            activity_data = ActivitySerializer(activities['results'], many=True).data
-                
+            activity_data = ActivitySerializer(paginated_queryset, many=True)
+
             payload = {
-                'activity_data': activity_data,
+                'activity_data': activity_data.data,
                 'next_query': activities['next'],
                 'previous_query': activities['previous'],
                 'count': activities['count']
             }
+            return Response(payload)
         except:
             payload = {
-                'activity_data': [],
+                'results': [],
                 'next_query': None,
                 'previous_query': None,
                 'count': 0

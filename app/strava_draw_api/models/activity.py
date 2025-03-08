@@ -15,18 +15,21 @@ class Activity(models.Model):
     external_id = models.PositiveBigIntegerField()
     activity_type = models.CharField()
     duration = models.PositiveIntegerField()
-    distance = models.FloatField()
-    avg_watts = models.FloatField()
-    avg_speed = models.FloatField()
-    work_done = models.FloatField()
-    elev_gain = models.FloatField()
-    polyline = models.CharField(help_text='comes from an activities map.summary_polyline attribute')
+    distance = models.FloatField(null=True, blank=True)
+    avg_watts = models.FloatField(null=True, blank=True)
+    avg_speed = models.FloatField(null=True, blank=True)
+    work_done = models.FloatField(null=True, blank=True)
+    elev_gain = models.FloatField(null=True, blank=True)
+    polyline = models.CharField(help_text='comes from an activities map.summary_polyline attribute', null=True, blank=True)
     name = models.CharField(null=True, blank=True)
     start_date = models.DateTimeField(null=True, blank=True)
 
     @property
     def pace(self):
-        self.duration / self.distance
+        if self.duration and self.distance:
+            self.duration / self.distance
+        else:
+            return None
 
     @property
     def uuid_encoded(self):

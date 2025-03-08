@@ -38,9 +38,6 @@ def get_authorization(code, user, scope):
         "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json",
     }
-    print('code', code)
-    print('scope', scope)
-    print(json.dumps(body))
     response = requests.post(TOKEN_ENDPOINT, headers=headers, data=json.dumps(body))
 
     if response.status_code == 200:
@@ -76,30 +73,45 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
     }
     url = f'https://www.strava.com/api/v3/athletes/{athlete_id}/activities?access_token={access_token}&per_page=30&page={page}'
     response = requests.get(url, headers=headers)
-    print(response.json())
+    # print(response.json())
 
     activities = []
     for strava_activity in response.json():
-        print('strava_activity')
-        new_activity_data = {
-            'user': user,
-            'integration': user.integration,
-            'external_id': strava_activity['id'],
-            'activity_type': strava_activity['sport_type'],
-            'duration': strava_activity['moving_time'],
-            'distance': strava_activity['distance'],
-            'avg_watts': strava_activity['average_watts'],
-            'avg_speed': strava_activity['average_speed'],
-            'work_done': strava_activity['kilojoules'],
-            'elev_gain': strava_activity['total_elevation_gain'],
-            'polyline': strava_activity['map']['summary_polyline'],
-            'name': strava_activity['name'],
-            'start_date': strava_activity['start_date'],
-        }
-        activity = Activity(**new_activity_data)
-        activity.save()
-        activities.append(activity)
-        
-    # create activities
+        # print('strava_activity', strava_activity['id'])
+        if 'run' or 'ride' in strava_activity['sport_type'].lower():
+            map = strava_activity.get('map', None)
+            new_activity_data = {
+                'user': user,
+                'integration': user.integration,
+                'external_id': strava_activity['id'],
+                'activity_type': strava_activity['sport_type'],
+                'duration': strava_activity['moving_time'],
+                'distance': strava_activity.get('distance', None),
+                'avg_watts': strava_activity.get('average_watts', None),
+                'avg_speed': strava_activity.get('average_speed', None),
+                'work_done': strava_activity.get('kilojoules', None),
+                'elev_gain': strava_activity['total_elevation_gain'],
+                'polyline': map.get('summary_polyline', None),
+                'name': strava_activity['name'],
+                'start_date': strava_activity['start_date'],
+            }
+            activity = Activity(**new_activity_data)
+            activity.save()
+            activities.append(activity)
 
+    return activities
+
+
+def get_all_activities(athlete_id, access_token, refresh_token, user, page=1, retry=False):
+    activities = []
+    more_activities = True
+    while more_activities:
+        activities_batch = get_activities(athlete_id, access_token, refresh_token, user, page, False)
+        activities.extend(activities_batch)
+        page += 1
+        # 30 is the default (max?) count per request strava allows
+        if len(activities_batch) < 30:
+            more_activities = False
+    print('all activities', activities)
+    print('total activity count', len(activities))
     return activities

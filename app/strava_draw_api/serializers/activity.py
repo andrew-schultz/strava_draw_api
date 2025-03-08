@@ -21,3 +21,11 @@ class ActivitySerializer(serializers.ModelSerializer):
             'start_date',
         )
     
+
+# class StravaActivitySerializer(serializers.Serializer):
+    
+class ActivityListSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
+    next = serializers.CharField()
+    previous = serializers.CharField()
+    results = ActivitySerializer(many=True)
