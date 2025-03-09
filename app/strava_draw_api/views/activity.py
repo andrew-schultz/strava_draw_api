@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from strava_draw_api.auth import JWTAuthentication
 # from strava_draw_api.models import Activity, Integration
-from strava_draw_api.serializers.activity import ActivitySerializer, ActivityListSerializer
+from strava_draw_api.serializers.activity import ActivitySerializer, ActivityAPISerializer, ActivityListSerializer
 from strava_draw_api.services.strava import get_activities
 
 
@@ -26,10 +26,12 @@ class ActivityAPIView(ListAPIView):
                 'previous_query': activities['previous'],
                 'count': activities['count']
             }
-            return Response(payload)
+            serializer = ActivityAPISerializer(payload)
+
+            return Response(serializer.data)
         except:
             payload = {
-                'results': [],
+                'activity_data': [],
                 'next_query': None,
                 'previous_query': None,
                 'count': 0

@@ -20,6 +20,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             'name',
             'start_date',
         )
+    pace = serializers.FloatField(required=False, allow_null=True)
     
 
 # class StravaActivitySerializer(serializers.Serializer):
@@ -29,3 +30,10 @@ class ActivityListSerializer(serializers.Serializer):
     next = serializers.CharField()
     previous = serializers.CharField()
     results = ActivitySerializer(many=True)
+
+
+class ActivityAPISerializer(serializers.Serializer):
+    activity_data = ActivitySerializer(many=True, allow_null=True, required=False)
+    next_query = serializers.CharField()
+    previous_query = serializers.CharField(required=False, allow_null=True)
+    count = serializers.IntegerField(required=False)

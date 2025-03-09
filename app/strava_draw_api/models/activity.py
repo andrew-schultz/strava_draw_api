@@ -27,7 +27,7 @@ class Activity(models.Model):
     @property
     def pace(self):
         if self.duration and self.distance:
-            self.duration / self.distance
+            return self.duration / self.distance
         else:
             return None
 

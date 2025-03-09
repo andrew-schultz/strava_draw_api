@@ -71,7 +71,7 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
         'Accept': "application/json, text/plain, */*",
         "Content-Type": "application/json",
     }
-    url = f'https://www.strava.com/api/v3/athletes/{athlete_id}/activities?access_token={access_token}&per_page=30&page={page}'
+    url = f'https://www.strava.com/api/v3/athletes/{athlete_id}/activities?access_token={access_token}&per_page=100&page={page}'
     response = requests.get(url, headers=headers)
     # print(response.json())
 
@@ -111,7 +111,7 @@ def get_all_activities(athlete_id, access_token, refresh_token, user, page=1, re
         activities.extend(activities_batch)
         page += 1
         # 30 is the default (max?) count per request strava allows
-        if len(activities_batch) < 30:
+        if len(activities_batch) < 100:
             more_activities = False
     print('all activities', activities)
     print('total activity count', len(activities))
