@@ -19,13 +19,14 @@ def get_access_token(refresh_token):
         'grant_type': "refresh_token",
     }
     headers = {
-      'Accept': "application/json, text/plain, */*",
-      "Content-Type": "application/json",
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
     }
 
     response = requests.post(TOKEN_ENDPOINT, headers=headers, json=body)
     print(response)
     return response.json()
+
 
 def get_authorization(code, user, scope):
     body = {
@@ -129,6 +130,7 @@ def get_single_activity(activity_id, access_token, user):
     strava_activity = response.json()
     return strava_activity
 
+
 def create_strava_activity(activity_id, access_token, user):
     strava_activity = get_single_activity(activity_id, access_token, user)
     map = strava_activity.get('map', None)
@@ -151,6 +153,7 @@ def create_strava_activity(activity_id, access_token, user):
     activity.save()
     return activity
 
+
 def update_strava_activity(activity_id, access_token, user, activity):
     strava_activity = get_single_activity(activity_id, access_token, user)
     map = strava_activity.get('map', None)
@@ -163,6 +166,6 @@ def update_strava_activity(activity_id, access_token, user, activity):
     activity.elev_gain = strava_activity['total_elevation_gain']
     activity.polyline = map.get('summary_polyline', None)
     activity.name = strava_activity['name']
-    activity.start_date  = strava_activity['start_date']
+    activity.start_date = strava_activity['start_date']
     activity.save()
     return activity

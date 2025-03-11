@@ -39,7 +39,7 @@ class SignatureAuthentication(BaseAuthentication):
 
     def get_model(self):
         return User
-    
+
     def authenticate(self, request):
         key = settings.SIG_KEY
         signature = request.headers.get('Authorization')
@@ -70,12 +70,12 @@ class JWTAuthentication(BaseAuthentication):
         if bearer != b'Bearer':
             raise InvalidToken("Bearer is a required field")
 
-        # get jwt secret from env var
-        jwt_secret = None
-        try:
-            jwt_secret = os.environ['JWT_SECRET']
-        except KeyError:
-            raise InvalidToken("JWT_SECRET not defined")
+        # # get jwt secret from env var
+        # jwt_secret = None
+        # try:
+        #     jwt_secret = os.environ['JWT_SECRET']
+        # except KeyError:
+        #     raise InvalidToken("JWT_SECRET not defined")
 
         # decode the token
         try:
@@ -84,7 +84,7 @@ class JWTAuthentication(BaseAuthentication):
             print('decode token', decode_token)
             # payload = jwt.decode(token, jwt_secret, algorithms=['HS256'])
             payload = jwt.decode(decode_token, settings.JWT_SECRET, algorithms=['HS256'])
-            
+
             print('payload', payload)
         except jwt.ExpiredSignatureError:
             raise ExpiredToken("Signature expired")
@@ -133,5 +133,3 @@ class AllowAuth(BaseAuthentication):
     # model = None
     def authenticate(self, request):
         return (AppUser, None)
-    
-

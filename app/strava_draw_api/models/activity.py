@@ -8,6 +8,7 @@ from django.dispatch import receiver
 # from strava_draw_api.models import Integration
 from strava_draw_api.utils import encode_uuid
 
+
 class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
     integration = models.ForeignKey('Integration', on_delete=models.CASCADE)

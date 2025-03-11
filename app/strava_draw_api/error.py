@@ -30,8 +30,8 @@ class MissingToken(APIException):
     default_detail = 'Missing token'
     default_code = MISSING_TOKEN
 
+
 class AccountExists(APIException):
     status_code = 400
     default_detail = 'Account already exists'
     default_code = ACCOUNT_EXISTS
-

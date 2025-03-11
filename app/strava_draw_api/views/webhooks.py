@@ -6,8 +6,9 @@ from strava_draw_api.models import Activity
 from strava_draw_api.serializers.strava import StravaRequestSerializer
 from strava_draw_api.services.strava import create_strava_activity, update_strava_activity
 
-
 VERIFY_TOKEN = 'stravadrawapiverifytoken1'
+
+
 class StravaWebhookView(APIView):
 
     def get(self, request):
@@ -22,9 +23,8 @@ class StravaWebhookView(APIView):
                 return Response({"hub.challenge":challenge})
             else:
                 raise PermissionDenied
-        
-        return Response()
 
+        return Response()
 
     def post(self, request):
         serializer = StravaRequestSerializer(data=request.data)

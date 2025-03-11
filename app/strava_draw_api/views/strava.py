@@ -10,7 +10,7 @@ class AuthAPIView(APIView):
 
     def get(self, request):
         return Response()
-    
+
     def post(self, request):
         data = request.data
         code = data.get('code')
@@ -19,12 +19,7 @@ class AuthAPIView(APIView):
         integration = get_authorization(code, user, scope)
 
         if integration:
-            print('integration', integration)
-            # pull the activities
-            # initial pull
             activities = get_all_activities(integration.account_id, integration.access_token, integration.refresh_token, user, 1, False)
-            print('activiites', len(activities))
-
             return Response(AuthResponseSerializer({'success': True, 'activities': activities[:100]}).data)
         else:
             # there was an error authorizing the code (or something else)
@@ -33,10 +28,10 @@ class AuthAPIView(APIView):
         # we could get the activities and return those?
         # sure, cause we don't want to return the acces token obvi, and that saves us from making another request immediately to get those activities
 
+
 class TokenAPIView(APIView):
     authentication_classes = (AllowAuth,)
 
     def post(self, request):
         # maybe this is like the user submitting a refresh token to get a fresh jwt for BE requests?
         return Response()
-    

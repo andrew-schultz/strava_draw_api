@@ -7,6 +7,7 @@ from django.dispatch import receiver
 
 from strava_draw_api.utils import encode_uuid
 
+
 class Integration(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='integration')
     uuid = models.UUIDField(unique=True, default=uuid4)

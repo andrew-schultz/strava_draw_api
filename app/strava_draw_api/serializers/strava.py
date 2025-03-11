@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 
-
 class StravaRequestUpdatesSerializer(serializers.Serializer):
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     type = serializers.CharField(required=False, allow_null=True, allow_blank=True)

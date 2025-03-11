@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .activity import ActivitySerializer
 
+
 class AuthResponseSerializer(serializers.Serializer):
     success = serializers.BooleanField()
     activities = ActivitySerializer(many=True)

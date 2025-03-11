@@ -8,6 +8,7 @@ from .integration import IntegrationAdmin
 
 from strava_draw_api.models import Activity, Integration
 
+
 class BudBandAdminSite(AdminSite):
     site_header = 'Strava Draw Admin'
     index_title = 'Dashboard'

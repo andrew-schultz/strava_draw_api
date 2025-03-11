@@ -9,9 +9,10 @@ from strava_draw_api.auth import JWTAuthentication, AllowAuth, SignatureAuthenti
 from strava_draw_api.utils import create_api_token
 from strava_draw_api.serializers.auth import LoginResponseSerializer, LoginSerializer, SignUpSerializer
 from strava_draw_api.services.strava import get_access_token, get_activities
-import jwt
+from strava_draw_api.models import Integration
 from django.conf import settings
 from strava_draw_api.error import AccountExists
+
 
 class LoginView(APIView):
     authentication_classes = [SignatureAuthentication, ]
@@ -31,7 +32,7 @@ class LoginView(APIView):
             token = create_api_token(payload)
         else:
             raise NotFound()
-        
+
         integration = user.integration
         if integration:
             # get a new access token
@@ -39,24 +40,20 @@ class LoginView(APIView):
             integration.refresh_token = strava_token['refresh_token']
             integration.access_token = strava_token['access_token']
             integration.save()
-
-            print('token', token)
-            
-
         resp_serializer = LoginResponseSerializer({'token': token, 'integration': bool(integration)})
         return Response(resp_serializer.data)
-    
+
 
 class LogOutView(APIView):
     authentication_classes = (JWTAuthentication,)
+
     def get(self, request):
-        print('goodbye')
-        user = request.user
         return Response()
 
 
 class SignUpView(APIView):
     authentication_classes = (SignatureAuthentication,)
+
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -79,12 +76,10 @@ class SignUpView(APIView):
             token = create_api_token(payload)
         else:
             raise NotFound()
-        
+
         try:
             integration = user.integration
-
-        except:
+        except Integration.DoesNotExist:
             integration = False
 
         return Response(LoginResponseSerializer({'token': token, 'integration': bool(integration)}).data)
-    

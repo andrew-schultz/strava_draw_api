@@ -36,5 +36,5 @@ class ActivityAPIView(ListAPIView):
                 'previous_query': None,
                 'count': 0
             }
-        
+
         return Response(payload)

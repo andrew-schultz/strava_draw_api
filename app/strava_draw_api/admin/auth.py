@@ -51,7 +51,6 @@ class UserAdmin(BaseUserAdmin):
         return readonly_fields
 
 
-
 class GroupAdmin(admin.ModelAdmin):
     filter_horizontal = ('permissions',)
 
