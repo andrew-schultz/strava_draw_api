@@ -29,6 +29,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 # DEBUG = True
 
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 DJANGO_ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS")
 if DJANGO_ALLOWED_HOSTS:
     DJANGO_ALLOWED_HOSTS.split(" ")
@@ -38,7 +41,7 @@ if DJANGO_ALLOWED_HOSTS:
 else:
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS")
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000/', 'http://localhost:3000', 'http://localhost', ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000/', 'http://localhost:3000', 'http://localhost', 'http://routeviewer.com', 'http://www.routeviewer.com', 'https://routeviewer.com', 'https://www.routeviewer.com']
 
 
 # Application definition

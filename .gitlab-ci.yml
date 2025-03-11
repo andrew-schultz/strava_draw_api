@@ -38,6 +38,7 @@ build:
     - docker-compose -f docker-compose.prod.yml build
     - docker push $IMAGE:web
     - docker push $IMAGE:nginx
+    - docker push $IMAGE:certbot
 
 deploy:
   stage: deploy

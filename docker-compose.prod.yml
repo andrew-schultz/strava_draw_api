@@ -25,14 +25,71 @@ services:
   #   env_file:
   #     - ./.env.prod.db
   nginx:
-    build: ./nginx
-    image: registry.gitlab.com/strava_draw/strava_draw_api:nginx
+    # build: ./nginx
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    # image: registry.gitlab.com/strava_draw/strava_draw_api:nginx
     volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
       - static_volume:/home/app/web/staticfiles
+      # - certs:/etc/nginx/certs
+      # - html:/usr/share/nginx/html
+      # - vhost:/etc/nginx/vhost.d
+      # - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
+      - 443:443
       - 80:80
     depends_on:
-    - web
+      - web
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  
+  # nginx:
+  #   image: nginx:1.15-alpine
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./data/nginx:/etc/nginx/conf.d
+
+
+  # nginx-proxy:
+  #   container_name: nginx-proxy
+  #   build: nginx
+  #   restart: always
+  #   ports:
+  #     - 443:443
+  #     - 80:80
+  #   volumes:
+  #     - static_volume:/home/app/web/staticfiles
+  #     - media_volume:/home/app/web/mediafiles
+  #     - certs:/etc/nginx/certs
+  #     - html:/usr/share/nginx/html
+  #     - vhost:/etc/nginx/vhost.d
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+  #   depends_on:
+  #     - web
+  # acme-companion:
+  #   image: nginxproxy/acme-companion
+  #   env_file:
+  #     - ./.env.staging.proxy-companion
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - certs:/etc/nginx/certs
+  #     - html:/usr/share/nginx/html
+  #     - vhost:/etc/nginx/vhost.d
+  #     - acme:/etc/acme.sh
+  #   depends_on:
+  #     - nginx
 
 volumes:
   postgres_data:
