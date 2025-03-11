@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
+from django.http import JsonResponse
 from strava_draw_api.admin import strava_draw_api_site
 from strava_draw_api.urls import (
     activity_urlpatterns,
@@ -26,7 +27,13 @@ from strava_draw_api.urls import (
     webhook_urlpatterns,
 )
 
+
+def home(request):
+    return JsonResponse({'hello': 'world!'})
+
+
 urlpatterns = [
+    path('', home, name='home'),
     # path('', strava_draw_api_site.urls),
     # path('accounts/', include('django.contrib.auth.urls')),
     path('api/v1/activity/', include(activity_urlpatterns)),
