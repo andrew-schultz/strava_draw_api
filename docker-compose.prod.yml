@@ -45,7 +45,7 @@ services:
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
   
   certbot:
-    build: ./data/certbot
+    build: ./data/certbot_build
     image: registry.gitlab.com/strava_draw/strava_draw_api:certbot
     restart: unless-stopped
     volumes:

@@ -7,7 +7,7 @@ fi
 
 domains=(routeviewer.com www.routeviewer.com)
 rsa_key_size=4096
-data_path="./data/certbot"
+data_path="./data/certbot_build"
 email="as173171@gmail.com" # Adding a valid address is strongly recommended
 staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
 
