@@ -30,8 +30,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./data/certbot_build/conf:/etc/letsencrypt
+      - ./data/certbot_build/www:/var/www/certbot
       - static_volume:/home/app/web/staticfiles
       # - certs:/etc/nginx/certs
       # - html:/usr/share/nginx/html
@@ -49,8 +49,8 @@ services:
     image: registry.gitlab.com/strava_draw/strava_draw_api:certbot
     restart: unless-stopped
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./data/certbot_build/conf:/etc/letsencrypt
+      - ./data/certbot_build/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   
   # nginx:
