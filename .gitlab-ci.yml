@@ -38,7 +38,7 @@ build:
     - docker pull $IMAGE:web || true
     - docker pull $IMAGE:nginx || true
     - docker pull $IMAGE:certbot || true
-    - docker-compose -f docker-compose.prod.yml build
+    - docker-compose -f docker-compose.yml build
     - docker push $IMAGE:web
     - docker push $IMAGE:nginx
     - docker push $IMAGE:certbot
@@ -54,7 +54,7 @@ deploy:
     - ssh-add ~/.ssh/id_rsa
     - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
     - chmod +x ./deploy.sh
-    - scp  -o StrictHostKeyChecking=no -r ./.env.prod ./docker-compose.prod.yml root@$DIGITAL_OCEAN_IP_ADDRESS:/app
+    - scp  -o StrictHostKeyChecking=no -r ./.env.prod ./docker-compose.yml root@$DIGITAL_OCEAN_IP_ADDRESS:/app
     - bash ./deploy.sh
   only:
     - main

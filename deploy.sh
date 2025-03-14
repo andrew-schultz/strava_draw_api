@@ -7,5 +7,5 @@ ssh -o StrictHostKeyChecking=no root@$DIGITAL_OCEAN_IP_ADDRESS << 'ENDSSH'
   docker pull $IMAGE:web
   docker pull $IMAGE:nginx
   docker pull $IMAGE:certbot
-  docker compose -f docker-compose.prod.yml up -d
+  docker compose -f docker-compose.yml up -d
 ENDSSH
