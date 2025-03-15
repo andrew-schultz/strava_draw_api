@@ -21,6 +21,7 @@ echo JWT_SECRET=$JWT_SECRET >> .env.prod
 
 echo WEB_IMAGE=$IMAGE:web >> .env.prod
 echo NGINX_IMAGE=$IMAGE:nginx >> .env.prod
+echo CERTBOT_IMAGE=$IMAGE:certbot >> .env.prod
 echo CI_REGISTRY_USER=$CI_REGISTRY_USER >> .env.prod
 echo CI_JOB_TOKEN=$CI_JOB_TOKEN >> .env.prod
 echo CI_REGISTRY=$CI_REGISTRY >> .env.prod
