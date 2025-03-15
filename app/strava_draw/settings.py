@@ -41,6 +41,7 @@ if DJANGO_ALLOWED_HOSTS:
 else:
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS")
 ALLOWED_HOSTS = ['*']
+DJANGO_ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000/', 'http://localhost:3000', 'http://localhost', 'http://routeviewer.com', 'http://www.routeviewer.com', 'https://routeviewer.com', 'https://www.routeviewer.com']
 
 
@@ -74,7 +75,7 @@ ROOT_URLCONF = 'strava_draw.urls'
 
 cors_rule = os.environ.get('CORS_RULE')
 # CORS_ALLOW_ALL_ORIGINS = bool(cors_rule)
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
