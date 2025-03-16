@@ -18,12 +18,14 @@ def create_jwt(payload):
         settings.JWT_SECRET,
         algorithm='HS256'
     )
-    print('payload in here', payload)
-    print('token', token)
-    try:
-        token.decode()
-    except jwt.exceptions.DecodeError:
-        pass
+    # print('payload in here', payload)
+    # print('token', token)
+    # try:
+    #     token.decode()
+    # except jwt.exceptions.DecodeError:
+    #     pass
+    # except AttributeError:
+    #     pass
     return token
 
 
