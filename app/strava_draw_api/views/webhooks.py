@@ -33,20 +33,20 @@ class StravaWebhookView(APIView):
         action = valid_data['aspect_type']
         external_id = valid_data['object_id']
         athlete_id = valid_data['owner_id']
+        print('webhook event', action, external_id, athlete_id)
         try:
             user = User.objects.get(integration__account_id=athlete_id)
         except User.DoesNotExist:
             return Response()
-        print('webhook update', action, external_id, athlete_id)
         if action == 'create':
-            activity = create_strava_activity(external_id, user.integration.access_token, user)
+            activity = create_strava_activity(external_id, user.integration, user)
         elif action == 'update':
             try:
                 activity = Activity.objects.get(external_id=external_id)
-                activity = update_strava_activity(external_id, user.integration.access_token, user, activity)
+                activity = update_strava_activity(external_id, user.integration, activity)
                 print('updated_activity name', activity.name)
             except Activity.DoesNotExist:
-                activity = create_strava_activity(external_id, user.integration.access_token, user)
+                activity = create_strava_activity(external_id, user.integration, user)
         elif action == 'delete':
             try:
                 activity = Activity.objects.get(external_id=external_id)
