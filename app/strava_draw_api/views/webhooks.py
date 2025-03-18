@@ -37,7 +37,7 @@ class StravaWebhookView(APIView):
             user = User.objects.get(integration__account_id=athlete_id)
         except User.DoesNotExist:
             return Response()
-
+        print('webhook update', action, external_id, athlete_id)
         if action == 'create':
             activity = create_strava_activity(external_id, user.integration.access_token, user)
         elif action == 'update':

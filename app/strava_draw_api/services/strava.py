@@ -79,8 +79,10 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
     activities = []
     for strava_activity in response.json():
         # print('strava_activity', strava_activity['id'])
-        if 'run' or 'ride' in strava_activity['sport_type'].lower():
-            map = strava_activity.get('map', None)
+        # if 'run' or 'ride' or 'walk' in strava_activity['sport_type'].lower():
+        map = strava_activity.get('map', None)
+        polyline = map.get('summary_polyline', None)
+        if polyline:
             new_activity_data = {
                 'user': user,
                 'integration': user.integration,
@@ -92,14 +94,13 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
                 'avg_speed': strava_activity.get('average_speed', None),
                 'work_done': strava_activity.get('kilojoules', None),
                 'elev_gain': strava_activity['total_elevation_gain'],
-                'polyline': map.get('summary_polyline', None),
+                'polyline': polyline,
                 'name': strava_activity['name'],
                 'start_date': strava_activity['start_date'],
             }
             activity = Activity(**new_activity_data)
             activity.save()
             activities.append(activity)
-
     return activities
 
 
@@ -133,25 +134,29 @@ def get_single_activity(activity_id, access_token, user):
 
 def create_strava_activity(activity_id, access_token, user):
     strava_activity = get_single_activity(activity_id, access_token, user)
+    # if 'run' or 'ride' or 'walk' in strava_activity['sport_type'].lower():
     map = strava_activity.get('map', None)
-    new_activity_data = {
-        'user': user,
-        'integration': user.integration,
-        'external_id': strava_activity['id'],
-        'activity_type': strava_activity['sport_type'],
-        'duration': strava_activity['moving_time'],
-        'distance': strava_activity.get('distance', None),
-        'avg_watts': strava_activity.get('average_watts', None),
-        'avg_speed': strava_activity.get('average_speed', None),
-        'work_done': strava_activity.get('kilojoules', None),
-        'elev_gain': strava_activity['total_elevation_gain'],
-        'polyline': map.get('summary_polyline', None),
-        'name': strava_activity['name'],
-        'start_date': strava_activity['start_date'],
-    }
-    activity = Activity(**new_activity_data)
-    activity.save()
-    return activity
+    polyline = map.get('summary_polyline', None)
+    if polyline:
+        new_activity_data = {
+            'user': user,
+            'integration': user.integration,
+            'external_id': activity_id,
+            'activity_type': strava_activity['sport_type'],
+            'duration': strava_activity['moving_time'],
+            'distance': strava_activity.get('distance', None),
+            'avg_watts': strava_activity.get('average_watts', None),
+            'avg_speed': strava_activity.get('average_speed', None),
+            'work_done': strava_activity.get('kilojoules', None),
+            'elev_gain': strava_activity['total_elevation_gain'],
+            'polyline': polyline,
+            'name': strava_activity['name'],
+            'start_date': strava_activity['start_date'],
+        }
+        activity = Activity(**new_activity_data)
+        activity.save()
+        return activity
+    return
 
 
 def update_strava_activity(activity_id, access_token, user, activity):
