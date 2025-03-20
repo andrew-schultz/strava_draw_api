@@ -5,6 +5,7 @@ INVALID_TOKEN = 'invalid_token'
 EXPIRED_TOKEN = 'expired_token'
 MISSING_TOKEN = 'missing_token'
 ACCOUNT_EXISTS = 'account_exists'
+# login_failed = 'login_failed'
 
 
 class BadRequest(APIException):
@@ -35,3 +36,9 @@ class AccountExists(APIException):
     status_code = 400
     default_detail = 'Account already exists'
     default_code = ACCOUNT_EXISTS
+
+
+# class LoginBadRequest(APIException):
+#     status_code = 400
+#     default_detail = ''
+#     default_code = MISSING_TOKEN

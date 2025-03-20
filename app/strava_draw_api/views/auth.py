@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
 from strava_draw_api.auth import JWTAuthentication, AllowAuth, SignatureAuthentication
+from strava_draw_api.error import BadRequest
 from strava_draw_api.utils import create_api_token
 from strava_draw_api.serializers.auth import LoginResponseSerializer, LoginSerializer, SignUpSerializer
 from strava_draw_api.services.strava import get_access_token, get_activities
@@ -31,7 +33,7 @@ class LoginView(APIView):
             }
             token = create_api_token(payload)
         else:
-            raise NotFound()
+            raise NotFound('An account cannot be found for that combination of email and password.\n\nPlease try again or follow the link below to Sign Up.')
 
         integration = user.integration
         if integration:
@@ -66,7 +68,9 @@ class SignUpView(APIView):
                 user = User.objects.create_user(email, email=email, password=password)
             except IntegrityError:
                 # raise an error that an account already exists
-                raise AccountExists()
+                raise AccountExists("An account for this email already exists. Please follow the link below to Log In.")
+        else:
+            raise BadRequest("Passwords don't match")
 
         if user:
             payload = {
