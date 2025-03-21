@@ -70,7 +70,7 @@ class SignUpView(APIView):
                 # raise an error that an account already exists
                 raise AccountExists("An account for this email already exists. Please follow the link below to Log In.")
         else:
-            raise BadRequest("Passwords don't match")
+            raise BadRequest("Passwords must match")
 
         if user:
             payload = {

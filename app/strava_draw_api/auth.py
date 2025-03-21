@@ -79,17 +79,12 @@ class JWTAuthentication(BaseAuthentication):
 
         # decode the token
         try:
-            print('token', token)
             decode_token = token.decode()
-            print('decode token', decode_token)
             # payload = jwt.decode(token, jwt_secret, algorithms=['HS256'])
             payload = jwt.decode(decode_token, settings.JWT_SECRET, algorithms=['HS256'])
-
-            print('payload', payload)
         except jwt.ExpiredSignatureError:
             raise ExpiredToken("Signature expired")
         except jwt.exceptions.DecodeError:
-            print('whyyyy')
             raise InvalidToken("Decode error")
         except jwt.InvalidTokenError:
             raise InvalidToken("Invalid token")
