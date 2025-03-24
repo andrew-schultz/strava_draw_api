@@ -1,12 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from strava_draw_api.auth import JWTAuthentication, AllowAuth
+from strava_draw_api.auth import JWTAuthentication, AllowAuth, SignatureAuthentication
 from strava_draw_api.services.strava import get_authorization, get_access_token, get_all_activities
 from strava_draw_api.serializers.auth import AuthResponseSerializer
 
 
 class AuthAPIView(APIView):
-    authentication_classes = (JWTAuthentication,)
+    authentication_classes = [JWTAuthentication, SignatureAuthentication, ]
 
     def get(self, request):
         return Response()
