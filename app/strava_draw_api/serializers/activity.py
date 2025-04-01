@@ -37,3 +37,7 @@ class ActivityAPISerializer(serializers.Serializer):
     next_query = serializers.CharField()
     previous_query = serializers.CharField(required=False, allow_null=True)
     count = serializers.IntegerField(required=False)
+
+
+class ActivityFirstAPISerializer(serializers.Serializer):
+    activities = ActivitySerializer(many=True)

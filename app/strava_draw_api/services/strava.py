@@ -127,9 +127,19 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
                 'name': strava_activity['name'],
                 'start_date': strava_activity['start_date'],
             }
-            activity = Activity(**new_activity_data)
-            activity.save()
-            activities.append(activity)
+            
+            activity = None
+            try:
+                activity = Activity.objects.get(user=user, integration=user.integration, external_id=strava_activity['id'])
+            except Activity.DoesNotExist:
+                pass
+
+            if activity:
+                activities.append(activity)
+            else:
+                new_activity = Activity(**new_activity_data)
+                new_activity.save()
+                activities.append(new_activity)
     return activities
 
 

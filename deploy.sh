@@ -6,6 +6,7 @@ ssh -o StrictHostKeyChecking=no root@$DIGITAL_OCEAN_IP_ADDRESS << 'ENDSSH'
   docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   docker pull $IMAGE:web
   docker pull $IMAGE:certbot
+  docker pull $IMAGE:celery_worker
   docker compose -f docker-compose.yml up -d
 ENDSSH
 

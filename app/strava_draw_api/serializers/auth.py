@@ -4,7 +4,7 @@ from .activity import ActivitySerializer
 
 class AuthResponseSerializer(serializers.Serializer):
     success = serializers.BooleanField()
-    activities = ActivitySerializer(many=True)
+    # activities = ActivitySerializer(many=True)
 
 
 class AuthCodeRequestSerializer(serializers.Serializer):

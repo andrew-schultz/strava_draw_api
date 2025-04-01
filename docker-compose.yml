@@ -10,6 +10,7 @@ services:
     command: gunicorn strava_draw.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
+      - .:/app
     ports:
       - 8000:8000
     expose:
@@ -45,6 +46,24 @@ services:
       - ./data/certbot_build/conf:/etc/letsencrypt
       - ./data/certbot_build/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  redis:
+    image: redis:7-alpine
+
+  celery_worker:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+    # build: ./data/celery_worker
+    image: registry.gitlab.com/strava_draw/strava_draw_api:celery_worker
+    command: /start-celeryworker
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - redis
+    # command: celery -A strava_draw.celery_app:app worker -l INFO
 
 volumes:
   postgres_data:

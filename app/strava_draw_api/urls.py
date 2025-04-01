@@ -4,6 +4,7 @@ from strava_draw_api.views import activity, auth, strava, webhooks
 
 activity_urlpatterns = [
     path('', activity.ActivityAPIView.as_view(), name='activity-list'),
+    path('first/', activity.FirstTimeActivityAPIView.as_view(), name='activity-first'),
 ]
 
 auth_urlpatterns = [
