@@ -35,13 +35,18 @@ class LoginView(APIView):
         else:
             raise NotFound('An account cannot be found for that combination of email and password.\n\nPlease try again or follow the link below to Sign Up.')
 
-        integration = user.integration
-        if integration:
-            # get a new access token
-            strava_token = get_access_token(integration.refresh_token)
-            integration.refresh_token = strava_token['refresh_token']
-            integration.access_token = strava_token['access_token']
-            integration.save()
+        integration = False
+        try:
+            integration = user.integration
+            if integration:
+                # get a new access token
+                strava_token = get_access_token(integration.refresh_token)
+                integration.refresh_token = strava_token['refresh_token']
+                integration.access_token = strava_token['access_token']
+                integration.save()
+        except:
+            integration = False
+
         resp_serializer = LoginResponseSerializer({'token': token, 'integration': bool(integration)})
         return Response(resp_serializer.data)
 
