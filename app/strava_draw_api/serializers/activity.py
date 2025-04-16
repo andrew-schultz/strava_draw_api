@@ -7,6 +7,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = (
+            'id',
             'external_id',
             'activity_type',
             'polyline',

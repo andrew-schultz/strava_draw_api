@@ -1,10 +1,14 @@
 from django.urls import path
 
-from strava_draw_api.views import activity, auth, strava, webhooks
+from strava_draw_api.views import activity, activity_stream, auth, strava, webhooks
 
 activity_urlpatterns = [
     path('', activity.ActivityAPIView.as_view(), name='activity-list'),
     path('first/', activity.FirstTimeActivityAPIView.as_view(), name='activity-first'),
+]
+
+activity_stream_urlpatterns = [
+    path('<int:activity_id>/', activity_stream.ActivityStreamAPIView.as_view(), name='activity-stream'),
 ]
 
 auth_urlpatterns = [

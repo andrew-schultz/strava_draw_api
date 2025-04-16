@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.models import User
-from strava_draw_api.models import Activity, Integration
+from strava_draw_api.models import Activity, Integration, ActivityStream
 
 
 STRAVA_CLIENT_ID = settings.STRAVA_CLIENT_ID
@@ -176,6 +176,54 @@ def get_single_activity(activity_id, integration):
     response = requests.get(url, headers=headers)
     strava_activity = response.json()
     return strava_activity
+
+
+def get_activity_streams(activity_id, integration, stream_type):
+    """
+    request an Activity stream object, pass a type to specify the stream (elevation, distance, etc)
+    generally at least 2 streams will be returned, the stream_type that was requested and either 'time' or 'distance',
+    which are used to chart the requested stream data
+    """
+
+    if integration.expires_at < datetime.now().timestamp():
+        integration = refresh_tokens(integration)
+
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {integration.access_token}",
+    }
+    url = f"https://www.strava.com/api/v3/activities/{activity_id}/streams?key_by_type=true&keys={stream_type}"
+    response = requests.get(url, headers=headers)
+    stream_resp = response.json()
+    # stream_resp = [ {
+    #     "type" : "distance",
+    #     "data" : [ 2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5 ],
+    #     "series_type" : "distance",
+    #     "original_size" : 12,
+    #     "resolution" : "high"
+    # } ]
+    return stream_resp
+
+
+def create_activity_stream(activity, integration, stream_type):
+    print('stream_type', stream_type)
+    strava_streams = get_activity_streams(activity.external_id, integration, stream_type)
+    activity_streams = []
+    for stream in strava_streams:
+        print('stream', stream)
+        new_stream_data = {
+            'activity': activity,
+            'stream_type': stream,
+            'data': strava_streams[stream]['data'],
+            'original_size': strava_streams[stream]['original_size'],
+        }
+
+        activity_stream = ActivityStream(**new_stream_data)
+        activity_stream.save()
+        activity_streams.append(activity_stream)
+
+    return activity_streams
 
 
 def create_strava_activity(activity_id, integration, user):

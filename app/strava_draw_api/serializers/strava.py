@@ -16,3 +16,7 @@ class StravaRequestSerializer(serializers.Serializer):
     owner_id = serializers.IntegerField()
     subscription_id = serializers.IntegerField()
     event_time = serializers.IntegerField()
+
+# class StravaActivityStream(serializers.Serializer):
+#     stream_type = serializers.charField()
+#     activity = 
