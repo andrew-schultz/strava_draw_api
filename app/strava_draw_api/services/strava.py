@@ -126,6 +126,7 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
                 'polyline': polyline,
                 'name': strava_activity['name'],
                 'start_date': strava_activity['start_date'],
+                'weighted_average_watts': strava_activity.get('weighted_average_watts', None),
             }
             
             activity = None
@@ -247,6 +248,7 @@ def create_strava_activity(activity_id, integration, user):
             'polyline': polyline,
             'name': strava_activity['name'],
             'start_date': strava_activity['start_date'],
+            'weighted_average_watts': strava_activity.get('weighted_average_watts', None),
         }
         activity = Activity(**new_activity_data)
         activity.save()
@@ -267,5 +269,6 @@ def update_strava_activity(activity_id, integration, activity):
     activity.polyline = map.get('summary_polyline', None)
     activity.name = strava_activity['name']
     activity.start_date = strava_activity['start_date']
+    activity.weighted_average_watts = strava_activity.get('weighted_average_watts', None)
     activity.save()
     return activity

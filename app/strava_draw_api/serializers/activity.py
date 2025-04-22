@@ -20,6 +20,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             'pace',
             'name',
             'start_date',
+            'weighted_average_watts',
         )
     pace = serializers.FloatField(required=False, allow_null=True)
 

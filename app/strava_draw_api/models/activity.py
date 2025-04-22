@@ -24,6 +24,7 @@ class Activity(models.Model):
     polyline = models.CharField(help_text='comes from an activities map.summary_polyline attribute', null=True, blank=True)
     name = models.CharField(null=True, blank=True)
     start_date = models.DateTimeField(null=True, blank=True)
+    weighted_average_watts = models.FloatField(null=True, blank=True)
 
     @property
     def pace(self):

@@ -14,9 +14,9 @@ class AuthAPIView(APIView):
     def post(self, request):
         data = request.data
         code = data.get('code')
-        print('code is', code)
+        # print('code is', code)
         scope = data.get('scope')
-        print('scope is', scope)
+        # print('scope is', scope)
         user = request.user
         integration = get_authorization(code, user, scope)
 
