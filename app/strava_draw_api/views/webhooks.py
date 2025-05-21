@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from strava_draw_api.models import Activity
 from strava_draw_api.serializers.strava import StravaRequestSerializer
-from strava_draw_api.services.strava import create_strava_activity, update_strava_activity
+from strava_draw_api.services.strava import create_strava_activity, update_strava_activity, create_activity_stream
 
 VERIFY_TOKEN = 'stravadrawapiverifytoken1'
 
@@ -40,6 +40,8 @@ class StravaWebhookView(APIView):
             return Response()
         if action == 'create':
             activity = create_strava_activity(external_id, user.integration, user)
+            # get/create activity_streams
+            streams = create_activity_stream(activity, user.integration, 'altitude')
         elif action == 'update':
             try:
                 activity = Activity.objects.get(external_id=external_id)

@@ -137,9 +137,11 @@ def get_activities(athlete_id, access_token, refresh_token, user, page=1, retry=
 
             if activity:
                 activities.append(activity)
+                create_activity_stream(activity, user.integration, 'altitude')
             else:
                 new_activity = Activity(**new_activity_data)
                 new_activity.save()
+                create_activity_stream(new_activity, user.integration, 'altitude')
                 activities.append(new_activity)
     return activities
 

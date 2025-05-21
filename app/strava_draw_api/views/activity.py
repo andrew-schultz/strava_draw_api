@@ -14,7 +14,7 @@ class ActivityAPIView(ListAPIView):
     authentication_classes = (JWTAuthentication,)
 
     def get(self, request):
-        queryset = request.user.activities.all().order_by('-start_date')
+        queryset = request.user.activities.all().order_by('-start_date').prefetch_related('activity_streams')
         try:
             paginated_queryset = self.paginate_queryset(queryset)
             activities = self.get_paginated_response(paginated_queryset)

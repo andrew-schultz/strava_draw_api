@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from strava_draw_api.models import Activity
+from strava_draw_api.serializers.activity_stream import ActivityStreamSerializer
 # from .user import UserSerializer
 
 
@@ -21,8 +22,10 @@ class ActivitySerializer(serializers.ModelSerializer):
             'name',
             'start_date',
             'weighted_average_watts',
+            'activity_streams',
         )
     pace = serializers.FloatField(required=False, allow_null=True)
+    activity_streams = ActivityStreamSerializer(many=True)
 
 
 # class StravaActivitySerializer(serializers.Serializer):
